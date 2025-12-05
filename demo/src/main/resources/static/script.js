@@ -10,12 +10,10 @@ async function carregarFilmes() {
         filmes.forEach(filme => {
             const row = listaBody.insertRow();
             
-            // ID (ÚNICA CÉLULA CENTRALIZADA)
             const idCell = row.insertCell(0);
             idCell.textContent = filme.id;
             idCell.className = "px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500"; 
             
-            // TÍTULO (Alinhado à esquerda, bom para leitura)
             const tituloCell = row.insertCell(1);
             tituloCell.textContent = filme.titulo;
             tituloCell.className = "px-6 py-4 whitespace-nowrap text-left text-sm text-gray-900"; 
@@ -49,40 +47,6 @@ async function carregarFilmes() {
     }
 }
 
-document.getElementById('filmeForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
-
-    const novoFilme = {
-        titulo: document.getElementById('titulo').value,
-        diretor: document.getElementById('diretor').value,
-        anoLancamento: parseInt(document.getElementById('anoLancamento').value),
-        genero: document.getElementById('genero').value,
-        duracaoMinutos: parseInt(document.getElementById('duracaoMinutos').value),
-        sinopse: document.getElementById('sinopse').value
-    };
-
-    try {
-        const response = await fetch(API_URL, {
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(novoFilme)
-        });
-
-        if (response.ok) {
-            alert('Filme salvo com sucesso!');
-        } else {
-            alert('Erro ao salvar filme.');
-        }
-
-    } catch (error) {
-        console.error('Erro de requisição:', error);
-        alert('Erro de conexão com o servidor.');
-    }
-
-    carregarFilmes(); 
-    this.reset();    
-});
-
 async function excluirFilme(id) {
     if (confirm(`Tem certeza que deseja excluir o filme com ID ${id}?`)) {
         try {
@@ -98,4 +62,40 @@ async function excluirFilme(id) {
     }
 }
 
-carregarFilmes();
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById('filmeForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); 
+
+        const novoFilme = {
+            titulo: document.getElementById('titulo').value,
+            diretor: document.getElementById('diretor').value,
+            anoLancamento: parseInt(document.getElementById('anoLancamento').value),
+            genero: document.getElementById('genero').value,
+            duracaoMinutos: parseInt(document.getElementById('duracaoMinutos').value),
+            sinopse: document.getElementById('sinopse').value
+        };
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(novoFilme)
+            });
+
+            if (response.ok) {
+                alert('Filme salvo com sucesso!');
+            } else {
+                alert('Erro ao salvar filme.');
+            }
+
+        } catch (error) {
+            console.error('Erro de requisição:', error);
+            alert('Erro de conexão com o servidor.');
+        }
+
+        carregarFilmes(); 
+        this.reset();    
+    });
+
+    carregarFilmes();
+});
