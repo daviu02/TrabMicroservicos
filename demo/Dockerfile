@@ -6,7 +6,7 @@ COPY src /app/src
 RUN mvn clean package -DskipTests
 
 # Stage 2: Runtime
-FROM openjdk:17-slim
+FROM amazoncorretto:17-alpine-jre
 WORKDIR /app
 COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
