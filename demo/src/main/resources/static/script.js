@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/api/filmes';
+const API_URL = '/api/filmes';
 
 async function carregarFilmes() {
     try {
