@@ -2,39 +2,35 @@ package com.example.controller;
 
 import com.example.model.Filme;
 import com.example.service.FilmeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*") 
 @RestController
-@RequestMapping("/api/filmes") 
+@RequestMapping("/api/filmes")
+@CrossOrigin(origins = "*")
 public class FilmeController {
 
-    private final FilmeService filmeService;
+    @Autowired
+    private FilmeService filmeService;
 
-    public FilmeController(FilmeService filmeService) {
-        this.filmeService = filmeService;
-    }
-
-    @PostMapping 
-    public ResponseEntity<Filme> adicionarFilme(@RequestBody Filme filme) {
-        Filme novoFilme = filmeService.salvarFilme(filme);
-        return ResponseEntity.status(201).body(novoFilme);
-    }
-
-    @GetMapping 
-    public ResponseEntity<List<Filme>> listarTodos() {
-        List<Filme> filmes = filmeService.listarTodos();
-        return ResponseEntity.ok(filmes);
+    @GetMapping
+    public List<Filme> listarTodos() {
+        return filmeService.listarTodos();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Filme> buscarPorId(@PathVariable Long id) {
         return filmeService.buscarPorId(id)
-                .map(ResponseEntity::ok) 
-                .orElse(ResponseEntity.notFound().build()); 
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public Filme adicionarFilme(@RequestBody Filme filme) {
+        return filmeService.salvar(filme);
     }
 
     @PutMapping("/{id}")
@@ -44,8 +40,8 @@ public class FilmeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluirFilme(@PathVariable Long id) {
-        filmeService.excluirFilme(id);
-        return ResponseEntity.noContent().build(); 
+    public ResponseEntity<?> excluir(@PathVariable Long id) {
+        filmeService.excluir(id);
+        return ResponseEntity.ok().build();
     }
 }
